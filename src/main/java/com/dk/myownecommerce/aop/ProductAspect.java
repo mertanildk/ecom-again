@@ -1,6 +1,7 @@
 package com.dk.myownecommerce.aop;
 
 import com.dk.myownecommerce.models.Category;
+import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
 import com.dk.myownecommerce.models.dto.request.ProductRequestDTO;
 import com.dk.myownecommerce.repositories.CategoryRepository;
 import com.dk.myownecommerce.services.ProductService;
@@ -19,8 +20,8 @@ public class ProductAspect {
         this.productService = productService;
     }
 
-    @Before("execution(* com.dk.myownecommerce.services.ProductService.createProductWithoutCategory(..)) && args(productRequestDTO)")
-    public void setDefaultCategory(ProductRequestDTO productRequestDTO) {
+    @Before("execution(* com.dk.myownecommerce.services.ProductService.createProduct(..)) && args(dto)")
+    public void setDefaultCategory(ProductAddRequestDTO dto) {
         // Find the default category using categoryRepository
         Category defaultCategory = categoryRepository.findById("1")
                 .orElseThrow(() -> new RuntimeException("Default category not found"));

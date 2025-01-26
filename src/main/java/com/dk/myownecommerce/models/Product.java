@@ -2,10 +2,7 @@ package com.dk.myownecommerce.models;
 
 import com.dk.myownecommerce.core.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
@@ -13,14 +10,15 @@ import lombok.Setter;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product extends BaseEntity {
     private String name;
     private String description;
     private String brand;
     private String price;
-    private Integer stock;
+    private Integer stock = 30;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 

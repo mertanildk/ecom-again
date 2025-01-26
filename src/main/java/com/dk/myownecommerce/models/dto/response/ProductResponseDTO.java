@@ -1,5 +1,7 @@
 package com.dk.myownecommerce.models.dto.response;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 
 public record ProductResponseDTO(

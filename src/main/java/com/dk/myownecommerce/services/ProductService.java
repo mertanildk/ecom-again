@@ -1,13 +1,18 @@
 package com.dk.myownecommerce.services;
 
+import com.dk.myownecommerce.core.model.exception.ProductNotFoundException;
+import com.dk.myownecommerce.core.model.mapper.ProductMapper;
 import com.dk.myownecommerce.models.Category;
-import com.dk.myownecommerce.models.dto.request.ProductRequestDTO;
+import com.dk.myownecommerce.models.Product;
+import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
 import com.dk.myownecommerce.models.dto.response.CategoryResponseDTO;
 import com.dk.myownecommerce.models.dto.response.ProductResponseDTO;
 import com.dk.myownecommerce.repositories.ProductRepository;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,43 +27,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public ProductResponseDTO getProductById(String id) {
-        return productRepository.findById(id)
-                .map(product -> new ProductResponseDTO(
-                        product.getName(),
-                        product.getDescription(),
-                        product.getBrand(),
-                        product.getPrice(),
-                        product.getStock(),
-                        new CategoryResponseDTO(product.getCategory().getName(),
-                                product.getCategory().getDescription())
-                ))
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+         return ProductMapper.mapForResponseDTO(
+                 productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException(id)));
     }
 
-    public ProductResponseDTO createProductWithoutCategory(ProductRequestDTO productRequestDTO) {
-        /*Product product =
-        product.setCategory(defaultCategory);
-        Product savedProduct = productRepository.save(product);
-        *//*return productMapper.productToResponseDTO(savedProduct);*/
-        return null;
-
+    public ProductResponseDTO createProduct(ProductAddRequestDTO dto) {
+        Product product = ProductMapper.mapForSaving(dto, defaultCategory);
+        return ProductMapper.mapForResponseDTO(productRepository.save(product));
     }
+
 
     public Set<ProductResponseDTO> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(product -> new ProductResponseDTO(
-                        product.getName(),
-                        product.getDescription(),
-                        product.getBrand(),
-                        product.getPrice(),
-                        product.getStock(),
-                        new CategoryResponseDTO(product.getCategory().getName(),
-                                product.getCategory().getDescription())
-                ))
-                .collect(Collectors.toSet());
+        return ProductMapper.mapForResponseDTO(productRepository.findAllProducts());
+
     }
 
 }

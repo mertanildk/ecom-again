@@ -1,5 +1,6 @@
 package com.dk.myownecommerce.controllers;
 
+import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
 import com.dk.myownecommerce.models.dto.request.ProductRequestDTO;
 import com.dk.myownecommerce.models.dto.response.ProductResponseDTO;
 import com.dk.myownecommerce.services.ProductService;
@@ -28,8 +29,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
-        return ResponseEntity.ok(productService.createProductWithoutCategory(productRequestDTO));
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductAddRequestDTO productRequestDTO) {
+        return ResponseEntity.ok(productService.createProduct(productRequestDTO));
     }
 
 }
