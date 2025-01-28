@@ -1,8 +1,12 @@
 package com.dk.myownecommerce.models;
 
 import com.dk.myownecommerce.core.model.BaseEntity;
+import com.dk.myownecommerce.models.enums.OrderStatus;
+import com.dk.myownecommerce.models.enums.UserState;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -30,5 +34,6 @@ public class Product extends BaseEntity {
         this.stock = 30;
         this.category = category;
     }
-
 }
+
+
