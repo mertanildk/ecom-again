@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.text.MessageFormat;
 
-import static com.dk.myownecommerce.utils.constants.MessageConstants.getErrorMessage;
-
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ProductNotFoundException extends NotFoundException {
 

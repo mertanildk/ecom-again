@@ -1,16 +1,20 @@
 package com.dk.myownecommerce.core.controller;
 
+import com.dk.myownecommerce.constants.messages.MessageConstants;
 import com.dk.myownecommerce.core.config.CustomUserDetailService;
 import com.dk.myownecommerce.core.model.AuthenticationRequest;
 import com.dk.myownecommerce.core.model.AuthenticationResponse;
+import com.dk.myownecommerce.core.model.apiResponse.CustomResponse;
 import com.dk.myownecommerce.core.service.JwtService;
-import com.dk.myownecommerce.models.WebUser;
 import com.dk.myownecommerce.models.dto.request.UserSignUpRequest;
-import org.springframework.http.ResponseEntity;
+import com.dk.myownecommerce.models.dto.response.UserSignUpResponse;
+import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.dk.myownecommerce.constants.messages.MessageConstants.SIGNUP_OK;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,22 +29,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        AuthenticationResponse response = jwtService.authenticate(authenticationRequest);
-        return ResponseEntity.ok(response);
+    public CustomResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
+        return CustomResponse.successOf(jwtService.authenticate(authenticationRequest));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserSignUpRequest signUpRequest) {
-        try {
-            WebUser user = userDetailService.registerUser(
-                    signUpRequest.username(),
-                    signUpRequest.password(),
-                    signUpRequest.email()
-            );
-            return ResponseEntity.ok("User registered successfully with ID: " + user.getId());
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public CustomResponse<UserSignUpResponse> registerUser(@RequestBody UserSignUpRequest signUpRequest) {
+        return CustomResponse.successOf(userDetailService.registerUser(signUpRequest), SIGNUP_OK);
+
     }
 }

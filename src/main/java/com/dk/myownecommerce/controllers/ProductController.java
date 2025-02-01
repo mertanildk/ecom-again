@@ -1,10 +1,10 @@
 package com.dk.myownecommerce.controllers;
 
+import com.dk.myownecommerce.core.model.apiResponse.CustomResponse;
 import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
 import com.dk.myownecommerce.models.dto.response.ProductResponseDTO;
 import com.dk.myownecommerce.services.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -20,16 +20,16 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Set<ProductResponseDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public CustomResponse<Set<ProductResponseDTO>> getAllProducts() {
+        return CustomResponse.successOf(productService.getAllProducts());
     }
     @GetMapping("/by-id/{id}")
-    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable String id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public CustomResponse<ProductResponseDTO> getProductById(@PathVariable String id) {
+        return CustomResponse.successOf(productService.getProductById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductAddRequestDTO productRequestDTO) {
-        return ResponseEntity.ok(productService.createProduct(productRequestDTO));
+    public CustomResponse<ProductResponseDTO> createProduct(@RequestBody ProductAddRequestDTO productRequestDTO) {
+        return CustomResponse.successOf(productService.createProduct(productRequestDTO));
     }
 
 }

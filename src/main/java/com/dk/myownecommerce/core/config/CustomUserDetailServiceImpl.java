@@ -1,7 +1,11 @@
 package com.dk.myownecommerce.core.config;
 
 import com.dk.myownecommerce.core.util.JwtUtil;
+import com.dk.myownecommerce.exceptions.EmailAlreadyException;
+import com.dk.myownecommerce.exceptions.UsernameAlreadyException;
 import com.dk.myownecommerce.models.WebUser;
+import com.dk.myownecommerce.models.dto.request.UserSignUpRequest;
+import com.dk.myownecommerce.models.dto.response.UserSignUpResponse;
 import com.dk.myownecommerce.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,20 +36,30 @@ public class CustomUserDetailServiceImpl implements CustomUserDetailService {
     }
 
     @Override
-    public WebUser registerUser(String username, String password, String email) {
+    public UserSignUpResponse registerUser(UserSignUpRequest signUpRequest) {
         // Check if the username or email already exists
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new RuntimeException("Email already exists");
-        }
+        WebUser user = saveUser(signUpRequest);
+        return mapSignUpResponse(user);
+    }
 
+    private WebUser saveUser(UserSignUpRequest signUpRequest) {
+        if (userRepository.findByUsername(signUpRequest.username()).isPresent()) {/*TODO ASPECT FOR THESE BUSINESS*/
+            throw new UsernameAlreadyException(signUpRequest.username());
+        }
+        if (userRepository.findByEmail(signUpRequest.email()).isPresent()) {/*TODO ASPECT FOR THESE BUSINESS*/
+            throw new EmailAlreadyException(signUpRequest.email());
+        }
         // Encode the password
-        String encodedPassword = passwordEncoder.encode(password);
-
+        String encodedPassword = passwordEncoder.encode(signUpRequest.password());
         // Create and save the user
-        WebUser user = new WebUser(username, encodedPassword, email);
-        return userRepository.save(user);
+        WebUser webUser = new WebUser(signUpRequest.username(), encodedPassword, signUpRequest.email());
+        return userRepository.save(webUser);
+    }
+
+    private UserSignUpResponse mapSignUpResponse(WebUser user) {
+        return UserSignUpResponse.builder()
+                .userName(user.getUsername())
+                .email(user.getEmail())
+                .build();
     }
 }
