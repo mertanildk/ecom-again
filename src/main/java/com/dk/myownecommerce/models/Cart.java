@@ -1,10 +1,7 @@
 package com.dk.myownecommerce.models;
 
 import com.dk.myownecommerce.core.model.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,8 +18,11 @@ public class Cart extends BaseEntity {
     private LocalDateTime created;
 
     @OneToOne
+    @JoinColumn(name = "web_user_id")
     private WebUser webUser;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineItem> items;
+
+    // Getters and setters
 }

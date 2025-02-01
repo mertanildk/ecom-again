@@ -24,4 +24,8 @@ public class LineItem extends BaseEntity {
 
     @ManyToOne
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 }

@@ -1,7 +1,6 @@
 package com.dk.myownecommerce.controllers;
 
 import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
-import com.dk.myownecommerce.models.dto.request.ProductRequestDTO;
 import com.dk.myownecommerce.models.dto.response.ProductResponseDTO;
 import com.dk.myownecommerce.services.ProductService;
 import jakarta.validation.Valid;

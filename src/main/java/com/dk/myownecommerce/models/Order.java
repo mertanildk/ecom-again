@@ -21,17 +21,19 @@ public class Order extends BaseEntity {
     private Double total;
 
     @OneToOne
+    @JoinColumn(name = "address_id")
     private Address shipTo;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @ManyToOne
+    @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineItem> lineItems;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments;
 }

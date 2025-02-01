@@ -1,9 +1,7 @@
 package com.dk.myownecommerce.models;
 
 import com.dk.myownecommerce.core.model.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,5 +20,7 @@ public class Account extends BaseEntity {
     private String billingAddress;
 
     @OneToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
+
 }

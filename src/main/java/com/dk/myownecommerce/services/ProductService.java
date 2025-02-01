@@ -5,16 +5,13 @@ import com.dk.myownecommerce.core.model.mapper.ProductMapper;
 import com.dk.myownecommerce.models.Category;
 import com.dk.myownecommerce.models.Product;
 import com.dk.myownecommerce.models.dto.request.ProductAddRequestDTO;
-import com.dk.myownecommerce.models.dto.response.CategoryResponseDTO;
 import com.dk.myownecommerce.models.dto.response.ProductResponseDTO;
 import com.dk.myownecommerce.repositories.ProductRepository;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {

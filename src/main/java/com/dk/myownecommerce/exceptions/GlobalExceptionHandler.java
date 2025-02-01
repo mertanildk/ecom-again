@@ -6,12 +6,14 @@ import com.dk.myownecommerce.core.exceptions.ErrorResponseBuilder;
 import com.dk.myownecommerce.core.model.exception.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -35,14 +37,15 @@ public class GlobalExceptionHandler {
                         (HttpStatus.BAD_REQUEST, "Validation failed", subErrors, VALIDATION_ERROR.name());
         return ResponseEntity.badRequest().body(customError);
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<CustomError> handleRuntimeException(final RuntimeException runtimeException) {
+    @ExceptionHandler(NoResourceFoundException.class)
+    protected ResponseEntity<CustomError> handleNoResourceFoundException(final NoResourceFoundException ex) {
         CustomError customError = ErrorResponseBuilder
-                .buildErrorResponse
-                        (HttpStatus.NOT_FOUND, runtimeException.getMessage(), API_ERROR.name());
+                .buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), NOT_FOUND.name());
+        /*add here the endpoint*/
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(customError);
     }
+
+
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<CustomError> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
@@ -58,6 +61,20 @@ public class GlobalExceptionHandler {
         CustomError customError = ErrorResponseBuilder
                 .buildErrorResponse(HttpStatus.FORBIDDEN, exception.getMessage(), AUTH_ERROR.name());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customError);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<CustomError> handleBadCredentialsException(final BadCredentialsException exception) {
+        CustomError customError = ErrorResponseBuilder
+                .buildErrorResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), AUTH_ERROR.name());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(customError);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<CustomError> handleRuntimeException(final RuntimeException runtimeException) {
+        CustomError customError = ErrorResponseBuilder
+                .buildErrorResponse
+                        (HttpStatus.NOT_FOUND, runtimeException.getMessage(), API_ERROR.name());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(customError);
     }
 
 

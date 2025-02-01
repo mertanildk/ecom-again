@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.List;
 public class CustomError {
 
     @Builder.Default
-    private LocalDateTime time = LocalDateTime.now();
+    private LocalTime time = LocalDateTime.now().toLocalTime();
 
     private Integer httpStatus;
 
